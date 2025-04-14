@@ -16,3 +16,14 @@ Content-Type: application/json
   "type": "robbery",
   "status": "solved"
 }
+
+### Post something
+POST http://localhost:5000/crimes HTTP/1.1
+Content-Type: application/json
+
+{
+  "description": "Test crime",
+  "severity_level": "low",
+  "type": "robbery",
+  "status": "solved"
+}

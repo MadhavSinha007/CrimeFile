@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
-import CrimeCard from '../components/CrimeCard'; // Ensure this path is correct
-
-// CrimeCard component directly included to ensure it works
-
+import CrimeCard from '../components/CrimeCard';
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,29 +13,15 @@ export default function Search() {
       try {
         setLoading(true);
         const response = await fetch('http://localhost:5000/crimes/');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
-        console.log('Fetched crimes data:', data);
-        
-        // Check if data is an array or if it has a specific property containing the array
+
         let crimesData = data;
-        if (!Array.isArray(data) && typeof data === 'object') {
-          // Try to find an array in the response
+        if (!Array.isArray(data)) {
           const possibleArrays = Object.values(data).filter(val => Array.isArray(val));
-          if (possibleArrays.length > 0) {
-            crimesData = possibleArrays[0];
-          } else {
-            // If we can't find an array, convert the object to an array if it has numeric keys
-            crimesData = Object.entries(data)
-              .filter(([key]) => !isNaN(Number(key)))
-              .map(([_, value]) => value);
-          }
+          crimesData = possibleArrays.length ? possibleArrays[0] : Object.values(data);
         }
-        
+
         setCrimes(Array.isArray(crimesData) ? crimesData : []);
       } catch (err) {
         console.error('Error fetching crimes:', err);
@@ -53,67 +36,76 @@ export default function Search() {
   }, []);
 
   const filteredCrimes = crimes.filter(crime => {
-    if (!searchTerm.trim()) return true; // Show all if search term is empty or whitespace
-    
+    if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase().trim();
     const field = searchType === 'severity' ? 'severity_level' : searchType;
     const fieldValue = crime[field]?.toString().toLowerCase() || '';
-    
     return fieldValue.includes(term);
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Search Crimes</h1>
-      
-      <div className="mb-8 bg-dark-800 p-4 rounded-lg">
-        <div className="flex flex-col md:flex-row gap-4 mb-4">
-          <input
-            type="text"
-            placeholder={`Search by ${searchType}...`}
-            className="flex-grow p-3 rounded-lg bg-dark-700 border border-dark-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            aria-label="Search crimes"
-          />
-          <select
-            className="p-3 rounded-lg bg-dark-700 border border-dark-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
-            aria-label="Select search type"
-          >
-            <option value="description">Description</option>
-            <option value="type">Type</option>
-            <option value="severity_level">Severity Level</option>
-            <option value="status">Status</option>
-          </select>
+    <div className="min-h-screen flex flex-col bg-black text-white">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold uppercase mb-8 border-b border-white/10 pb-2">
+          Search Crimes
+        </h1>
+
+        <div className="bg-neutral-900 border border-white/10 p-6 rounded-xl mb-10">
+          <div className="flex flex-col md:flex-row gap-4">
+            <input
+              type="text"
+              placeholder={`Search by ${searchType}...`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 px-4 py-3 bg-neutral-800 border border-white/10 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white transition"
+            />
+            <select
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+              className="px-4 py-3 bg-neutral-800 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white transition"
+            >
+              <option value="description">Description</option>
+              <option value="type">Type</option>
+              <option value="severity_level">Severity Level</option>
+              <option value="status">Status</option>
+            </select>
+          </div>
         </div>
-      </div>
-      
-      <div className="space-y-4">
-        {loading ? (
-          <p className="text-center py-8">Loading crimes data...</p>
-        ) : error ? (
-          <p className="text-center py-8 text-red-500">Error: {error}</p>
-        ) : filteredCrimes.length > 0 ? (
-          filteredCrimes.map(crime => (
-            <CrimeCard key={crime.crime_id} crime={crime} />
-          ))
-        ) : searchTerm.trim() ? (
-          <p className="text-center py-8 bg-dark-800 rounded-lg">
-            No crimes found matching "{searchTerm}" in {searchType}.
-            {crimes.length > 0 && (
-              <span className="block mt-2 text-sm text-gray-400">
-                {crimes.length} crimes available but none match your search.
-              </span>
-            )}
-          </p>
-        ) : (
-          <p className="text-center py-8 bg-dark-800 rounded-lg">
-            {crimes.length === 0 ? 'No crimes available.' : `${crimes.length} crimes available. Enter a search term.`}
-          </p>
-        )}
-      </div>
+
+        <div className="space-y-6">
+          {loading ? (
+            <div className="text-center py-10 flex items-center justify-center gap-3">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span>Loading crimes data...</span>
+            </div>
+          ) : error ? (
+            <div className="text-center py-10 text-red-500">{error}</div>
+          ) : filteredCrimes.length > 0 ? (
+            filteredCrimes.map(crime => (
+              <CrimeCard key={crime.crime_id} crime={crime} />
+            ))
+          ) : searchTerm.trim() ? (
+            <div className="text-center py-10 border border-white/10 rounded-lg bg-neutral-900">
+              <p>
+                No crimes found matching{' '}
+                <span className="italic">"{searchTerm}"</span> in{' '}
+                <b>{searchType}</b>.
+              </p>
+              {crimes.length > 0 && (
+                <p className="mt-2 text-sm text-gray-500">
+                  {crimes.length} crimes exist, but none match your query.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-10 border border-white/10 rounded-lg bg-neutral-900">
+              {crimes.length === 0
+                ? 'No crimes available.'
+                : `${crimes.length} crimes loaded. Start searching above.`}
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

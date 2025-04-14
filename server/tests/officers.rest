@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "name": "John Doe",
-  "crime_id": 1
+  "crime_id": 11
 }
 
 ### Get Officers by Crime ID

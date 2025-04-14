@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const crimefunc = require("../models/crimesModel.js");
 
+
 // Get all crimes
 router.get('/', async (req, res) => {
   try {
@@ -47,5 +48,29 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Failed to update crime', error: err.message });
   }
 });
+
+//POST a crime
+router.post('/', async (req, res) => {
+  try {
+    const { description, severity_level, type, status } = req.body;
+
+    const crimeId = await crimefunc.create({
+      type,
+      description,
+      severity_level,
+      status: status || 'open',
+    });
+
+    res.status(201).json({ 
+      message: 'Crime created successfully',
+      crime_id: crimeId 
+    });
+
+  } catch (err) {
+    console.error('Error creating crime:', err);
+    res.status(500).json({ message: 'Failed to create crime', error: err.message });
+  }
+});
+
 
 module.exports = router;
