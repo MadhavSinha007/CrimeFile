@@ -40,7 +40,7 @@ export default function Navbar() {
               to="/analytics" 
               className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider"
             >
-              Analytics
+              AI SEARCH
             </Link>
           </motion.div>
 
