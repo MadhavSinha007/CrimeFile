@@ -1,0 +1,22 @@
+### Create Victim
+POST http://localhost:5000/victims HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "age": 30,
+  "gender": "Female",
+  "crime_id": 1
+}
+
+###
+
+### Get Victims by Crime ID
+GET http://localhost:5000/victims/crime/3 HTTP/1.1
+
+###
+
+### Delete Victims by Crime ID
+DELETE http://localhost:5000/victims/crime/1 HTTP/1.1
+
+###

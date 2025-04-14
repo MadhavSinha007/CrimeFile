@@ -1,0 +1,18 @@
+### Get All Crimes
+GET http://localhost:5000/crimes HTTP/1.1
+Content-Type: application/json
+
+### Get Crime by ID
+GET http://localhost:5000/crimes/1 HTTP/1.1
+Content-Type: application/json
+
+### Update Crime
+PUT http://localhost:5000/crimes/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "description": "Updated crime description",
+  "severity_level": "high",
+  "type": "robbery",
+  "status": "solved"
+}

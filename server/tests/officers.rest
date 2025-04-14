@@ -1,0 +1,16 @@
+### Create Officer
+POST http://localhost:5000/officers HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "crime_id": 1
+}
+
+### Get Officers by Crime ID
+GET http://localhost:5000/officers/crime/1 HTTP/1.1
+Content-Type: application/json
+
+### Delete Officers by Crime ID
+DELETE http://localhost:5000/officers/crime/1 HTTP/1.1
+Content-Type: application/json
