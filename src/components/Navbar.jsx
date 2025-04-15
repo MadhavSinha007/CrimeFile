@@ -37,7 +37,7 @@ export default function Navbar() {
             whileTap={{ scale: 0.95 }}
           >
             <Link 
-              to="/analytics" 
+              to="/aisearch" 
               className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider"
             >
               AI SEARCH

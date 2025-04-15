@@ -7,6 +7,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CrimeDetail from './pages/CrimeDetail';
+import AiDetail from './AiSearch/AiDetail';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/crime/:id" element={<CrimeDetail />} />
+            <Route path="/aisearch" element={<AiDetail />} />
           </Routes>
         </main>
         
