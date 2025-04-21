@@ -79,36 +79,36 @@ export default function Home() {
   // Card data - moved outside to reuse
   const featureCards = [
     {
-      title: 'Geo Crime Heatmaps',
-      desc: 'Visualize high-risk zones based on historical and real-time data feeds.',
+      title: 'Dynamic Data Insights',
+      desc: 'Dive into real-time crime data with advanced search capabilities.',
     },
     {
-      title: 'Suspect Behavior Tracker',
-      desc: 'Tracks anomalies in behavior patterns and flags repeat offenders.',
+      title: 'Administrative Control Hub',
+      desc: 'Effortlessly manage and update records through secure access.',
     },
     {
-      title: 'Facial Recognition Logs',
-      desc: 'Aggregates recognition hits across surveillance networks.',
+      title: 'Enhanced Data Security',
+      desc: 'Access crime data securely, with robust privacy measures in place.',
     },
     {
-      title: 'Live Case Sync',
-      desc: 'Collaborate across departments on active investigations in real-time.',
+      title: 'AI-Powered Face Recognition',
+      desc: 'Identify suspects instantly with cutting-edge facial recognition.',
     },
     {
-      title: 'Secure Evidence Vault',
-      desc: 'Blockchain-based evidence storage with access audit trails.',
+      title: 'Secure Evidence Repository',
+      desc: 'Store and manage critical evidence with advanced access controls.',
     },
     {
-      title: 'Crowdsourced Intel',
-      desc: 'Tap into community-submitted reports with AI-powered filtering.',
+      title: 'Collaborative Intelligence',
+      desc: 'Utilize community reports enhanced by AI for actionable insights.',
     },
     {
-      title: 'Fleet Monitoring',
-      desc: 'Live updates from field drones, body cams, and patrol vehicles.',
+      title: 'Live Fleet Operations',
+      desc: 'Track and coordinate field units in real-time with precision.',
     },
     {
-      title: 'Predictive Dispatch',
-      desc: 'Sends patrols preemptively to likely future crime zones.',
+      title: 'Smart Crime Forecasting',
+      desc: 'Predict and prevent incidents with data-driven dispatch strategies.',
     },
   ];
 
@@ -482,7 +482,7 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            What agencies are saying
+            What our developer says
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
