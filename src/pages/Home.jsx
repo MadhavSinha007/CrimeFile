@@ -485,22 +485,12 @@ export default function Home() {
             What our developer says
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8">
             {[
               {
-                quote: 'CrimeWise transformed our situational response time. Absolutely game-changing.',
-                name: 'Chief Alvarez',
-                org: 'Metro PD',
-              },
-              {
-                quote: 'The pattern recognition is uncannily accurate. Feels like science fiction.',
-                name: 'Agent Lora',
-                org: 'Interlinked Ops',
-              },
-              {
-                quote: 'Secure, sleek, and surprisingly intuitive. Everything enforcement tech should be.',
-                name: 'Lt. Bram',
-                org: 'Coastal Surveillance Unit',
+                quote: 'I loved working on this—creating the database, integrating AI, implementing authentication, and solving the challenges I faced along the way. It was a great experience.',
+                name: 'Madhav Sinha',
+            org: 'Computer Science Student ar SRM RAMAPURAM CHENNI',
               },
             ].map((t, i) => (
               <motion.div
