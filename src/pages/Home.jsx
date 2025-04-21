@@ -216,7 +216,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            Precision intelligence for predictive safety.
+            A Place to view and analyze crime data in real-time.
           </motion.p>
           
           {/* Buttons with original styling from the second code but with motion effects */}
@@ -302,18 +302,18 @@ export default function Home() {
       className="mb-20 text-center"
     >
       <h2 className="text-4xl font-bold uppercase mb-4 text-white">
-        TACTICAL OPERATIONS PLATFORM
+        TACTICAL OPERATIONS ON THIS PLATFORM
       </h2>
       <p className="text-gray-400 max-w-3xl mx-auto">
-        Advanced tools designed for modern law enforcement needs
+        Advanced tools designed for modern needs. From real-time monitoring to secure evidence management.
       </p>
     </motion.div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {[
         {
-          title: 'REAL-TIME MONITORING',
-          desc: 'Live data streams integrated with field operations to maintain immediate situational awareness.',
+          title: 'REAL-TIME DATA SEARCH',
+          desc: 'Search and analyze data from the mysql database in real-time.',
           icon: (
             <svg viewBox="0 0 24 24" className="w-8 h-8">
               <path 
@@ -324,8 +324,8 @@ export default function Home() {
           )
         },
         {
-          title: 'PATTERN DETECTION',
-          desc: 'Identify behavior-based anomalies before events unfold. Trained on global datasets.',
+          title: 'REAL-TIME ADMINISTRATION',
+          desc: 'Manage data and update data in real-time direcelty through a secure login for .',
           icon: (
             <svg viewBox="0 0 24 24" className="w-8 h-8">
               <path 
@@ -336,25 +336,25 @@ export default function Home() {
           )
         },
         {
-          title: 'SECURE EVIDENCE LEDGER',
-          desc: 'Immutable audit trails. Military-grade encryption. Zero tolerance for tampering.',
-          icon: (
-            <svg viewBox="0 0 24 24" className="w-8 h-8">
-              <path 
-                fill="currentColor" 
-                d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"
-              />
-            </svg>
-          )
-        },
-        {
-          title: 'MULTI-AGENCY COLLABORATION',
-          desc: 'Seamless syncing of jurisdictional intelligence, permissions, and alerts.',
+          title: 'PRIVACY AND SECURITY',
+          desc: 'No login required to access the data. All data is stored in a secure mysql database.',
           icon: (
             <svg viewBox="0 0 24 24" className="w-8 h-8">
               <path 
                 fill="currentColor" 
                 d="M12 4c1.93 0 3.68.78 4.95 2.05l-1.41 1.41a5.022 5.022 0 0 0-7.08 0L7.05 6.05A6.976 6.976 0 0 1 12 4zm7.78-.78l-1.41 1.41C19.86 5.85 21 8.17 21 10.8V12h-2v-1.2c0-1.68-.6-3.22-1.59-4.42l1.41-1.41-1.41-1.41 1.41-1.41 1.41 1.41 1.41-1.41-1.41 1.41zM19 17v4h2v-4h-2zm-7 3c-1.93 0-3.68-.78-4.95-2.05l1.41-1.41a5.022 5.022 0 0 0 7.08 0l1.41 1.41A6.976 6.976 0 0 1 12 20z"
+              />
+            </svg>
+          )
+        },
+        {
+          title: 'ADVANCED AI FACIAL RECOGNITION',
+          desc: 'Seamless recoginition of criminal faces when uploded in AISearch.',
+          icon: (
+            <svg viewBox="0 0 24 24" className="w-8 h-8">
+              <path 
+                fill="currentColor" 
+                d="M12 3a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8H5v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9z"
               />
             </svg>
           )
@@ -414,17 +414,17 @@ export default function Home() {
       <section className="py-32 px-6 border-t border-neutral-800 text-center">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-4xl font-bold uppercase mb-8 hover:text-gray-300 transition">
-            Ready to deploy CrimeWise?
+          Identify the criminal based on their face.
           </h2>
           <p className="text-gray-400 mb-12 hover:text-white transition">
-            Get early access to the tactical toolkit redefining public safety ops.
+          Get early access to the tactical toolkit redefining public safety—powered by advanced AI search with the Gemini API. Upload a criminal's face and receive a detailed report instantly"
           </p>
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link
-              to="/contact"
+              to="/aisearch"
               className="inline-block px-10 py-4 border border-white text-white hover:bg-white hover:text-black transition uppercase text-sm"
             >
-              Request Access
+              Search Now
             </Link>
           </motion.div>
         </div>
