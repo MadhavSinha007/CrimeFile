@@ -485,7 +485,7 @@ export default function Home() {
             What our developer says
           </motion.h2>
 
-          <div className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
             {[
               {
                 quote: 'I loved working on this—creating the database, integrating AI, implementing authentication, and solving the challenges I faced along the way. It was a great experience.',
