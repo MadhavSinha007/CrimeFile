@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import CrimeWiseLogo from '../assets/CrimeWiseLogo.png';
 
 export default function Navbar() {
   return (
@@ -9,12 +10,16 @@ export default function Navbar() {
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          className="flex items-center"
         >
-          <Link 
-            to="/" 
-            className="text-2xl font-bold text-white tracking-tighter"
-          >
-            CRIMEWISE
+          <Link to="/" className="flex items-center">
+            <motion.img
+              src={CrimeWiseLogo}
+              alt="CrimeWise Logo"
+              className="h-12 w-auto"
+              whileHover={{ scale: 1.3, rotate: 360 }}
+              transition={{ type: 'spring', stiffness: 150 }}
+            />
           </Link>
         </motion.div>
 
@@ -24,8 +29,8 @@ export default function Navbar() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link 
-              to="/search" 
+            <Link
+              to="/search"
               className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider"
             >
               Case Database
@@ -36,8 +41,8 @@ export default function Navbar() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link 
-              to="/aisearch" 
+            <Link
+              to="/aisearch"
               className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider"
             >
               AI SEARCH
@@ -48,8 +53,8 @@ export default function Navbar() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-sm transition-all duration-200 font-medium border border-gray-700 uppercase text-sm tracking-wider"
             >
               Agent Portal

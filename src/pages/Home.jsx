@@ -394,7 +394,7 @@ export default function Home() {
               {
                 quote: 'I loved working on this—creating the database, integrating AI, implementing authentication, and solving the challenges I faced along the way. It was a great experience.',
                 name: 'Madhav Sinha',
-                org: 'Computer Science Student ar SRM RAMAPURAM CHENNI',
+                org: 'Computer Science Student ar SRM RAMAPURAM CHENNAI',
               },
             ].map((t, i) => (
               <motion.div
