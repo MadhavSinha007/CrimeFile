@@ -9,6 +9,7 @@ export default function CrimeDetail() {
   const [suspects, setSuspects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [partialError, setPartialError] = useState(null);
 
   // Status colors mapping matching CrimeCard
   const getStatusStyle = (status) => {
@@ -74,16 +75,46 @@ export default function CrimeDetail() {
     };
   };
 
-  // Severity colors reverted to original string-based mapping
-  const severityColors = {
-    'high': 'text-red-400 bg-red-500/20 border-red-500/40 shadow-red-500/30',
-    'medium': 'text-orange-400 bg-orange-500/20 border-orange-500/40 shadow-orange-500/30',
-    'low': 'text-green-400 bg-green-500/20 border-green-500/40 shadow-green-500/30',
-  };
-
-  const getSeverityColor = (severity) => {
-    const normalizedSeverity = severity?.toLowerCase();
-    return severityColors[normalizedSeverity] || 'text-gray-400 bg-gray-500/20 border-gray-500/40 shadow-gray-500/30';
+  // Severity colors matching CrimeCard (unchanged)
+  const getSeverityStyle = (severity) => {
+    if (!severity) return {
+      bgColor: 'bg-gray-500/20',
+      textColor: 'text-gray-400',
+      borderColor: 'border-gray-500/40',
+      accentColor: 'from-gray-500/20'
+    };
+    
+    const severityLower = severity?.toLowerCase();
+    
+    if (severityLower?.includes('high')) {
+      return {
+        bgColor: 'bg-red-500/20',
+        textColor: 'text-red-400',
+        borderColor: 'border-red-500/40',
+        accentColor: 'from-red-500/20'
+      };
+    } else if (severityLower?.includes('med') || severityLower?.includes('medium')) {
+      return {
+        bgColor: 'bg-orange-500/20',
+        textColor: 'text-orange-400',
+        borderColor: 'border-orange-500/40',
+        accentColor: 'from-orange-500/20'
+      };
+    } else if (severityLower?.includes('low')) {
+      return {
+        bgColor: 'bg-green-500/20',
+        textColor: 'text-green-400',
+        borderColor: 'border-green-500/40',
+        accentColor: 'from-green-500/20'
+      };
+    }
+    
+    return {
+      bgColor: 'bg-gray-500/20',
+      textColor: 'text-gray-400',
+      borderColor: 'border-gray-500/40',
+      accentColor: 'from-gray-500/20'
+    };
   };
 
   useEffect(() => {
@@ -91,30 +122,40 @@ export default function CrimeDetail() {
       try {
         setLoading(true);
         setError(null);
+        setPartialError(null);
         
-        const [crimeRes, officersRes, victimsRes, suspectsRes] = await Promise.all([
-          fetch(`http://localhost:5000/crimes/${id}`).then(res => {
-            if (!res.ok) throw new Error('Failed to fetch crime details');
-            return res.json();
-          }),
-          fetch(`http://localhost:5000/officers/crime/${id}`).then(res => {
-            if (!res.ok) throw new Error('Failed to fetch officers');
-            return res.json();
-          }),
-          fetch(`http://localhost:5000/victims/crime/${id}`).then(res => {
-            if (!res.ok) throw new Error('Failed to fetch victims');
-            return res.json();
-          }),
-          fetch(`http://localhost:5000/suspects/crime/${id}`).then(res => {
-            if (!res.ok) throw new Error('Failed to fetch suspects');
-            return res.json();
-          })
+        // Fetch crime details first
+        const crimeRes = await fetch(`http://localhost:5000/crimes/${id}`);
+        if (!crimeRes.ok) throw new Error('Failed to fetch crime details');
+        const crimeData = await crimeRes.json();
+        setCrime(crimeData.crime || null);
+
+        // Then fetch other data in parallel
+        const [officersRes, victimsRes, suspectsRes] = await Promise.all([
+          fetch(`http://localhost:5000/officers/crime/${id}`)
+            .then(res => res.ok ? res.json() : { officers: [] })
+            .catch(() => ({ officers: [] })),
+          fetch(`http://localhost:5000/victims/crime/${id}`)
+            .then(res => res.ok ? res.json() : { victims: [] })
+            .catch(() => ({ victims: [] })),
+          fetch(`http://localhost:5000/suspects/crime/${id}`)
+            .then(res => res.ok ? res.json() : { suspects: [] })
+            .catch(() => ({ suspects: [] }))
         ]);
 
-        setCrime(crimeRes.crime || null);
         setOfficers(officersRes.officers || []);
         setVictims(victimsRes.victims || []);
         setSuspects(suspectsRes.suspects || []);
+
+        // Check if any secondary requests failed
+        const errors = [];
+        if (!officersRes.officers) errors.push('officers');
+        if (!victimsRes.victims) errors.push('victims');
+        if (!suspectsRes.suspects) errors.push('suspects');
+        
+        if (errors.length > 0) {
+          setPartialError(`Could not load: ${errors.join(', ')}`);
+        }
         
       } catch (err) {
         console.error("Error fetching crime data:", err);
@@ -155,38 +196,49 @@ export default function CrimeDetail() {
   }
 
   const statusStyle = getStatusStyle(crime.status);
+  const severityStyle = getSeverityStyle(crime.severity_level);
+
+  // Helper function to display data or "Not Available"
+  const displayData = (data) => data || 'Not Available';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black to-neutral-950 text-white p-8">
+      {/* Partial error notification */}
+      {partialError && (
+        <div className="mb-6 p-4 bg-yellow-500/20 border border-yellow-500/40 rounded-lg text-yellow-400">
+          <p>{partialError}</p>
+        </div>
+      )}
+
       {/* Header */}
       <h1 className="text-4xl font-bold tracking-wider text-white mb-8 relative group inline-block">
         Crime Case Details
         <span className="absolute bottom-0 left-0 w-0 h-1 bg-white transition-all duration-300 group-hover:w-full"></span>
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-${severityStyle.accentColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
       </h1>
 
       {/* Crime Overview Section */}
-      <div className="group bg-gradient-to-b from-neutral-900 to-black border border-white/30 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-white/50 mb-8">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-white/50 via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className={`group bg-gradient-to-b from-neutral-900 to-black border ${severityStyle.borderColor} rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:bg-neutral-800/50 hover:border-white/50 hover:shadow-2xl mb-8`}>
+        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-${severityStyle.accentColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
         <div className="p-6">
           <div className="flex justify-between items-start mb-6">
             <div>
               <p className="text-sm text-white/60 mb-2 font-mono">
-                Case ID: <span className="text-white bg-white/20 px-2 py-1 rounded transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">#{id}</span>
+                Case ID: <span className={`text-white ${severityStyle.bgColor} px-2 py-1 rounded transition-all duration-300 group-hover:bg-white/20 group-hover:text-white group-hover:scale-105 group-hover:-translate-y-1`}>#{displayData(id)}</span>
               </p>
-              <h2 className="text-2xl font-bold tracking-wider text-white">{crime.type || 'Unknown Type'}</h2>
+              <h2 className="text-2xl font-bold tracking-wider text-white group-hover:text-white/90">{displayData(crime.type)}</h2>
             </div>
             <div className="text-right">
               <p className="text-sm mb-2">
-                <span className="text-white/60">Severity:</span>
-                <span className={`ml-2 text-xs px-3 py-1 rounded-full font-medium uppercase ${getSeverityColor(crime.severity_level)} transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1 hover:shadow-lg`}>
-                  {crime.severity_level || 'Unknown'}
+                <span className="text-white/60 group-hover:text-white/80">Severity:</span>
+                <span className={`ml-2 text-xs px-3 py-1 rounded-full font-medium uppercase ${severityStyle.textColor} ${severityStyle.bgColor} ${severityStyle.borderColor} transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1`}>
+                  {displayData(crime.severity_level)}
                 </span>
               </p>
               <p className="text-sm">
-                <span className="text-white/60">Status:</span>
-                <span className={`ml-2 text-xs px-3 py-1 rounded-full font-medium uppercase ${statusStyle.textColor} ${statusStyle.bgColor} ${statusStyle.borderColor} transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1 hover:shadow-lg`}>
-                  {crime.status || 'Unknown'}
+                <span className="text-white/60 group-hover:text-white/80">Status:</span>
+                <span className={`ml-2 text-xs px-3 py-1 rounded-full font-medium uppercase ${statusStyle.textColor} ${statusStyle.bgColor} ${statusStyle.borderColor} transition-all duration-300 group-hover:bg-white/10 group-hover:text-white group-hover:border-white group-hover:scale-105 group-hover:-translate-y-1`}>
+                  {displayData(crime.status)}
                 </span>
               </p>
             </div>
@@ -198,41 +250,41 @@ export default function CrimeDetail() {
               Case Description
               <span className="absolute bottom-0 left-0 w-0 h-1 bg-white transition-all duration-300 group-hover:w-full"></span>
             </h3>
-            <blockquote className="relative pl-4 border-l-4 border-white/50 bg-white/10 rounded-lg p-4 transition-all duration-300 hover:bg-white/20 hover:shadow-lg hover:shadow-white/20">
-              <p className="text-white/80 text-sm leading-relaxed italic font-light">
-                {crime.description || 'No description available'}
+            <blockquote className={`relative pl-4 border-l-4 ${severityStyle.borderColor} ${severityStyle.bgColor} rounded-lg p-4 transition-all duration-300 hover:bg-white/10 hover:border-white/50 hover:shadow-lg`}>
+              <p className="text-white/80 text-sm leading-relaxed italic font-light group-hover:text-white/90">
+                {displayData(crime.description)}
               </p>
             </blockquote>
           </div>
 
           {/* Additional Crime Details */}
-          <div className="mt-6 pt-4 border-t border-white/20">
-            {crime.date && (
-              <p className="text-sm text-white/60">
-                <span className="text-white">Date Reported:</span> <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{new Date(crime.date).toLocaleDateString()}</span>
-              </p>
-            )}
-            {crime.location && (
-              <p className="text-sm text-white/60 mt-2">
-                <span className="text-white">Location:</span> <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{crime.location}</span>
-              </p>
-            )}
+          <div className="mt-6 pt-4 border-t border-white/20 group-hover:border-white/40">
+            <p className="text-sm text-white/60 group-hover:text-white/80">
+              <span className="text-white">Date Reported:</span> <span className="transition-all duration-300 group-hover:text-white group-hover:scale-105 group-hover:-translate-y-1">
+                {crime.date ? new Date(crime.date).toLocaleDateString() : 'Not Available'}
+              </span>
+            </p>
+            <p className="text-sm text-white/60 mt-2 group-hover:text-white/80">
+              <span className="text-white">Location:</span> <span className="transition-all duration-300 group-hover:text-white group-hover:scale-105 group-hover:-translate-y-1">
+                {displayData(crime.location)}
+              </span>
+            </p>
           </div>
         </div>
       </div>
 
       {/* Full Case Details Section */}
       {crime.about && (
-        <div className="group bg-gradient-to-b from-neutral-900 to-black border border-white/30 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-white/50 mb-8">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-white/50 via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className={`group bg-gradient-to-b from-neutral-900 to-black border ${severityStyle.borderColor} rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:bg-neutral-800/50 hover:border-white/50 hover:shadow-2xl mb-8`}>
+          <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-${severityStyle.accentColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
           <div className="p-6">
             <h2 className="text-2xl font-bold tracking-wider text-white mb-4 group inline-block relative">
               Full Case Details
               <span className="absolute bottom-0 left-0 w-0 h-1 bg-white transition-all duration-300 group-hover:w-full"></span>
             </h2>
             <div className="prose prose-invert max-w-none">
-              <p className="text-white/80 leading-relaxed text-sm">
-                {crime.about}
+              <p className={`text-white/80 leading-relaxed text-sm ${severityStyle.bgColor} p-4 rounded-lg transition-all duration-300 hover:bg-white/10 hover:text-white/90`}>
+                {displayData(crime.about)}
               </p>
             </div>
           </div>
@@ -248,27 +300,30 @@ export default function CrimeDetail() {
         <InfoCard 
           title="Investigating Officers" 
           items={officers} 
-          emptyMessage="No officers assigned"
+          emptyMessage="No officers information available"
+          severityStyle={severityStyle}
         />
         <InfoCard 
           title="Victims" 
           items={victims} 
-          emptyMessage="No victims listed"
+          emptyMessage="No victims information available"
+          severityStyle={severityStyle}
         />
         <InfoCard 
           title="Suspects" 
           items={suspects} 
-          emptyMessage="No suspects identified"
+          emptyMessage="No suspects information available"
+          severityStyle={severityStyle}
         />
       </div>
     </div>
   );
 }
 
-function InfoCard({ title, items, emptyMessage = "None listed" }) {
+function InfoCard({ title, items, emptyMessage = "Not Available", severityStyle }) {
   return (
-    <div className="group bg-gradient-to-b from-neutral-900 to-black border border-white/30 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-white/50">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-white/50 via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <div className={`group bg-gradient-to-b from-neutral-900 to-black border ${severityStyle.borderColor} rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:bg-neutral-800/50 hover:border-white/50 hover:shadow-2xl`}>
+      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-${severityStyle.accentColor} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
       <div className="p-4">
         <h3 className="text-lg font-semibold text-white mb-4 tracking-wider group inline-block relative">
           {title}
@@ -277,27 +332,45 @@ function InfoCard({ title, items, emptyMessage = "None listed" }) {
         {items && items.length > 0 ? (
           <div className="space-y-3">
             {items.map((item, idx) => (
-              <div key={idx} className="p-3 border border-white/30 rounded-lg bg-white/10 transition-all duration-300 hover:bg-white/20 hover:border-white/50 hover:shadow-lg hover:shadow-white/20">
-                <p className="text-white font-semibold tracking-wider mb-1">
-                  <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{item.name || 'Unknown'}</span>
+              <div key={idx} className={`p-3 border ${severityStyle.borderColor} rounded-lg ${severityStyle.bgColor} transition-all duration-300 hover:bg-white/10 hover:border-white/50 hover:shadow-lg`}>
+                <p className="text-white font-semibold tracking-wider mb-1 group-hover:text-white/90">
+                  <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">
+                    {item.name || 'Name Not Available'}
+                  </span>
                 </p>
-                {item.age && <p className="text-sm text-white/60">
-                  Age: <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{item.age}</span>
-                </p>}
-                {item.gender && <p className="text-sm text-white/60">
-                  Gender: <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{item.gender}</span>
-                </p>}
-                {item.rank && <p className="text-sm text-white/60">
-                  Rank: <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{item.rank}</span>
-                </p>}
-                {item.relation && <p className="text-sm text-white/60">
-                  Relation: <span className="transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">{item.relation}</span>
-                </p>}
+                {item.age !== undefined && (
+                  <p className="text-sm text-white/60 group-hover:text-white/80">
+                    Age: <span className="transition-all duration-300 group-hover:text-white">
+                      {item.age ?? 'Not Available'}
+                    </span>
+                  </p>
+                )}
+                {item.gender !== undefined && (
+                  <p className="text-sm text-white/60 group-hover:text-white/80">
+                    Gender: <span className="transition-all duration-300 group-hover:text-white">
+                      {item.gender ?? 'Not Available'}
+                    </span>
+                  </p>
+                )}
+                {item.rank !== undefined && (
+                  <p className="text-sm text-white/60 group-hover:text-white/80">
+                    Rank: <span className="transition-all duration-300 group-hover:text-white">
+                      {item.rank ?? 'Not Available'}
+                    </span>
+                  </p>
+                )}
+                {item.relation !== undefined && (
+                  <p className="text-sm text-white/60 group-hover:text-white/80">
+                    Relation: <span className="transition-all duration-300 group-hover:text-white">
+                      {item.relation ?? 'Not Available'}
+                    </span>
+                  </p>
+                )}
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-white/40 text-sm italic">{emptyMessage}</p>
+          <p className="text-white/40 text-sm italic group-hover:text-white/60">{emptyMessage}</p>
         )}
       </div>
     </div>
