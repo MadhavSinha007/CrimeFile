@@ -45,7 +45,7 @@ export default function Search() {
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white">
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-12">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold uppercase mb-8 border-b border-white/10 pb-2">
           Search Crimes
         </h1>
@@ -72,39 +72,41 @@ export default function Search() {
           </div>
         </div>
 
-        <div className="space-y-6">
-          {loading ? (
-            <div className="text-center py-10 flex items-center justify-center gap-3">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Loading crimes data...</span>
-            </div>
-          ) : error ? (
-            <div className="text-center py-10 text-red-500">{error}</div>
-          ) : filteredCrimes.length > 0 ? (
-            filteredCrimes.map(crime => (
-              <CrimeCard key={crime.crime_id} crime={crime} />
-            ))
-          ) : searchTerm.trim() ? (
-            <div className="text-center py-10 border border-white/10 rounded-lg bg-neutral-900">
-              <p>
-                No crimes found matching{' '}
-                <span className="italic">"{searchTerm}"</span> in{' '}
-                <b>{searchType}</b>.
-              </p>
-              {crimes.length > 0 && (
-                <p className="mt-2 text-sm text-gray-500">
-                  {crimes.length} crimes exist, but none match your query.
+        {loading ? (
+          <div className="text-center py-10 flex items-center justify-center gap-3">
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span>Loading crimes data...</span>
+          </div>
+        ) : error ? (
+          <div className="text-center py-10 text-red-500">{error}</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCrimes.length > 0 ? (
+              filteredCrimes.map(crime => (
+                <CrimeCard key={crime.crime_id} crime={crime} />
+              ))
+            ) : searchTerm.trim() ? (
+              <div className="col-span-full text-center py-10 border border-white/10 rounded-lg bg-neutral-900">
+                <p>
+                  No crimes found matching{' '}
+                  <span className="italic">"{searchTerm}"</span> in{' '}
+                  <b>{searchType}</b>.
                 </p>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-10 border border-white/10 rounded-lg bg-neutral-900">
-              {crimes.length === 0
-                ? 'No crimes available.'
-                : `${crimes.length} crimes loaded. Start searching above.`}
-            </div>
-          )}
-        </div>
+                {crimes.length > 0 && (
+                  <p className="mt-2 text-sm text-gray-500">
+                    {crimes.length} crimes exist, but none match your query.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="col-span-full text-center py-10 border border-white/10 rounded-lg bg-neutral-900">
+                {crimes.length === 0
+                  ? 'No crimes available.'
+                  : `${crimes.length} crimes loaded. Start searching above.`}
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );
