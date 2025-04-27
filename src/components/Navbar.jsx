@@ -31,7 +31,7 @@ export default function Navbar() {
           >
             <Link
               to="/search"
-              className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider"
+              className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider block"
             >
               Case Database
             </Link>
@@ -43,9 +43,9 @@ export default function Navbar() {
           >
             <Link
               to="/aisearch"
-              className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider"
+              className="text-gray-400 hover:text-white transition-colors duration-200 font-medium uppercase text-sm tracking-wider block"
             >
-              AI SEARCH
+              AI Search
             </Link>
           </motion.div>
 
@@ -55,7 +55,7 @@ export default function Navbar() {
           >
             <Link
               to="/login"
-              className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-sm transition-all duration-200 font-medium border border-gray-700 uppercase text-sm tracking-wider"
+              className="px-4 py-2 bg-white hover:bg-black text-black hover:text-white rounded-sm transition-all duration-200 font-medium border border-black hover:border-white uppercase text-sm tracking-wider"
             >
               Agent Portal
             </Link>
