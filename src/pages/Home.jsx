@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
+
+
 // Particle component for the hero section with glowing effect
 const ParticleCanvas = () => {
   const canvasRef = useRef(null);
@@ -62,7 +64,8 @@ const ParticleCanvas = () => {
         particle.update();
         particle.draw();
       });
-      requestAnimationFrame(animate);
+      // Throttle animation to 30 FPS
+      setTimeout(() => requestAnimationFrame(animate), 1000 / 30);
     };
 
     animate();
