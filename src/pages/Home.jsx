@@ -27,11 +27,11 @@ const ParticleCanvas = () => {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1; // Slightly smaller particles
-        this.speedX = (Math.random() * 0.5 - 0.25) * 0.5; // Adjusted speed
+        this.size = Math.random() * 3 + 1;
+        this.speedX = (Math.random() * 0.5 - 0.25) * 0.5;
         this.speedY = (Math.random() * 0.5 - 0.25) * 0.5;
         this.opacity = Math.random() * 0.6 + 0.2;
-        this.glow = Math.random() * 15 + 5; // Increased glow
+        this.glow = Math.random() * 15 + 5;
       }
 
       update() {
@@ -64,8 +64,8 @@ const ParticleCanvas = () => {
 
     // Animation loop
     const animate = () => {
-      // Clear with a semi-transparent black to create trails
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      // Clear canvas completely (no trail effect)
+      ctx.fillStyle = 'rgba(0, 0, 0, 1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw particles
@@ -97,7 +97,7 @@ const ParticleCanvas = () => {
         width: '100%', 
         height: '100%', 
         zIndex: 0,
-        pointerEvents: 'none' // Add this to prevent interaction issues
+        pointerEvents: 'none'
       }} 
     />
   );
