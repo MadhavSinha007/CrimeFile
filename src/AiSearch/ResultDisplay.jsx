@@ -452,7 +452,7 @@ function ResultDisplay({ result, error, imagePreview }) {
                 
                 <div className="bg-black/30 p-5 rounded-lg">
                   <h4 className="text-lg font-bold text-white mb-3 relative group inline-flex">
-                    Action Required
+                    Download Report
                     <span className="absolute left-0 bottom-0 w-full h-px bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
                   </h4>
                   <div className="grid grid-cols-1 gap-3">
