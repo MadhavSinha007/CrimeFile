@@ -1,6 +1,6 @@
 # CRIMEWISE - Criminal Investigation System
 
-![Lyra Chat]()
+![Lyra Chat](./public/crimewisecover%20-%201.png)
 
 ## Overview
 
