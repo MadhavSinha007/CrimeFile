@@ -414,14 +414,14 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            What our developer says
+            What our developer says (ME)
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-1 gap-10">
             {[
               {
                 quote: 'I loved working on this—creating the database, integrating AI, implementing authentication, and solving the challenges I faced along the way. It was a great experience.',
                 name: 'Madhav Sinha',
-                org: 'Computer Science Student ar SRM RAMAPURAM CHENNAI',
+                org: 'Computer Science Student at SRM RAMAPURAM CHENNAI',
               },
             ].map((t, i) => (
               <motion.div
