@@ -1,5 +1,7 @@
 # CRIMEWISE - Criminal Investigation System
 
+![Lyra Chat]()
+
 ## Overview
 
 CRIMEWISE is a comprehensive criminal investigation platform that combines powerful AI search capabilities with a robust crime database management system. The platform helps law enforcement agencies efficiently search criminal records, manage case information, and conduct investigations through separate modules for AI-powered searches and traditional database queries.
